@@ -1,0 +1,1011 @@
+/* DalGuide - Hargeisa Theme: Green & White/Dark */
+:root {
+    /* Colors - Light Theme */
+    --primary: #1b5e20; /* Deep Forest Green */
+    --secondary: #4caf50; /* Vibrant Green */
+    --accent: #81c784; /* Light Green */
+    --bg-main: #f4f9f4; /* Very light greenish white */
+    --bg-panel: rgba(255, 255, 255, 0.9);
+    --bg-modal: #ffffff;
+    --text-main: #1a2e1a; /* Dark Greenish Charcoal */
+    --text-muted: #556b55;
+    --border: rgba(27, 94, 32, 0.15);
+    --shadow: 0 8px 32px rgba(27, 94, 32, 0.1);
+    
+    /* Typography */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Outfit', sans-serif;
+    
+    /* Layout */
+    --sidebar-width: 400px;
+    --border-radius: 16px;
+    --transition-speed: 0.3s;
+}
+
+[data-theme="dark"] {
+    --primary: #4caf50;
+    --secondary: #81c784;
+    --accent: #a5d6a7;
+    --bg-main: #0d120d; /* Very Dark Green/Black */
+    --bg-panel: rgba(18, 26, 18, 0.9);
+    --bg-modal: #162116;
+    --text-main: #e8f5e9;
+    --text-muted: #a3bca3;
+    --border: rgba(76, 175, 80, 0.2);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    overflow: hidden;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* App Container (Sidebar + Map) */
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100%;
+    background: var(--bg-panel);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 3000;
+    box-shadow: var(--shadow);
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), margin-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.sidebar.closed {
+    margin-left: calc(-1 * var(--sidebar-width));
+}
+
+/* Header */
+.app-header {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 28px;
+    color: var(--primary);
+}
+
+.logo-text h1 {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.2;
+}
+
+.logo-text p {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.action-btn:hover {
+    color: var(--primary);
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.02);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 16px 4px;
+    border: none;
+    background: none;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.tab-btn:hover {
+    color: var(--text-main);
+}
+
+.tab-btn.active {
+    color: var(--primary);
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 3px 3px 0 0;
+}
+
+.badge {
+    background: var(--primary);
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+/* Sidebar Content Area */
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Custom Scrollbar */
+.sidebar-content::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar-content::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+.tab-pane {
+    display: none;
+    padding: 20px;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Search & Categories */
+.search-filter-container {
+    position: sticky;
+    top: 0;
+    background: var(--bg-panel);
+    z-index: 10;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 40px;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--bg-modal);
+    color: var(--text-main);
+    font-family: var(--font-body);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-box input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.clear-search {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.categories-wrapper {
+    overflow-x: auto;
+}
+.categories-wrapper::-webkit-scrollbar { display: none; }
+
+.categories-scroll {
+    display: flex;
+    gap: 8px;
+    padding-bottom: 4px;
+}
+
+.category-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    background: var(--bg-modal);
+    border-radius: 20px;
+    color: var(--text-main);
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.category-btn:hover {
+    border-color: var(--secondary);
+}
+
+.category-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Attraction Cards (No Images layout) */
+.attractions-list, .favorites-list, .itinerary-list, .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.card {
+    background: var(--bg-modal);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    display: flex;
+    padding: 16px;
+    align-items: center;
+    gap: 16px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    border-color: var(--primary);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--primary);
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    margin-bottom: 4px;
+    color: var(--text-main);
+}
+
+.card-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.card-fav-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--border);
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.card-fav-btn:hover {
+    transform: scale(1.1);
+}
+
+.card-fav-btn.active {
+    color: var(--primary);
+}
+
+/* FAQ Section */
+.faq-item {
+    background: var(--bg-modal);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.faq-question {
+    padding: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(76, 175, 80, 0.05);
+}
+
+.faq-answer {
+    padding: 0 16px 16px;
+    font-size: 14px;
+    color: var(--text-muted);
+    display: none;
+    line-height: 1.5;
+}
+
+.faq-item.open .faq-answer {
+    display: block;
+}
+
+/* Empty States */
+.empty-state, .empty-itinerary {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+}
+.empty-state i, .empty-itinerary i {
+    font-size: 40px;
+    color: var(--border);
+    margin-bottom: 16px;
+}
+
+/* Pane Headers */
+.pane-header {
+    margin-bottom: 24px;
+}
+.pane-header h2 {
+    font-family: var(--font-heading);
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+.pane-header p {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Itinerary specific */
+.day-selector select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--bg-modal);
+    color: var(--text-main);
+    font-family: var(--font-body);
+}
+
+.itinerary-item {
+    display: flex;
+    align-items: center;
+    background: var(--bg-modal);
+    padding: 12px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+    gap: 12px;
+}
+
+.itinerary-item-info {
+    flex: 1;
+}
+.itinerary-item-info h4 {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.remove-itinerary-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px;
+}
+.remove-itinerary-btn:hover {
+    color: #d32f2f;
+}
+
+/* --- MAIN MAP AREA --- */
+.main-map-area {
+    flex: 1;
+    position: relative;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-main);
+}
+
+/* Floating WhatsApp Button */
+.whatsapp-float {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background-color: #25d366;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+    z-index: 2000;
+    transition: transform 0.3s;
+    text-decoration: none;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+    color: white;
+}
+
+/* Sidebar Toggle (Shows on all devices) */
+.mobile-sidebar-toggle {
+    display: flex;
+    position: fixed; /* Use fixed so it perfectly aligns with WhatsApp fixed button */
+    bottom: 90px; /* Aligned vertically with WhatsApp floating button */
+    left: 20px;
+    z-index: 9999; /* Above map and mobile sidebar */
+    background-color: #25d366; /* Match WhatsApp green */
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4); /* Match WhatsApp shadow */
+    cursor: pointer;
+    transition: transform 0.3s, left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.mobile-sidebar-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Custom Map Marker styles */
+.custom-marker {
+    background: transparent;
+    border: none;
+}
+.marker-pin {
+    width: 30px;
+    height: 30px;
+    border-radius: 50% 50% 50% 0;
+    background: var(--primary);
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    margin: -15px 0 0 -15px;
+    box-shadow: inset -3px 2px 3px rgba(0,0,0,0.2), 0px 4px 6px rgba(0,0,0,0.3);
+}
+.marker-pin::after {
+    content: '';
+    width: 14px;
+    height: 14px;
+    margin: 8px 0 0 8px;
+    background: #fff;
+    position: absolute;
+    border-radius: 50%;
+}
+
+.custom-marker i {
+    position: absolute;
+    width: 22px;
+    font-size: 12px;
+    left: 0;
+    right: 0;
+    margin: 6px auto;
+    text-align: center;
+    color: var(--primary);
+    z-index: 2;
+}
+
+.custom-marker.cafe .marker-pin { background: var(--secondary); }
+.custom-marker.cafe i { color: var(--secondary); }
+
+.custom-marker.activity .marker-pin { background: var(--primary); }
+.custom-marker.activity i { color: var(--primary); }
+
+.custom-marker.lounge .marker-pin { background: var(--accent); }
+.custom-marker.lounge i { color: #fff; }
+
+/* Popup Styling */
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    background: var(--bg-modal);
+    color: var(--text-main);
+}
+.leaflet-popup-content {
+    margin: 0;
+    line-height: 1.4;
+}
+.popup-content {
+    padding: 12px;
+    min-width: 200px;
+}
+.popup-content h3 {
+    margin-bottom: 4px;
+    font-family: var(--font-heading);
+}
+
+/* --- MODAL --- */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-backdrop.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-card {
+    background: var(--bg-modal);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    border-radius: var(--border-radius);
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 24px 48px rgba(0,0,0,0.3);
+}
+
+.modal-backdrop.show .modal-card {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(0,0,0,0.1);
+    color: var(--text-main);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s;
+}
+.modal-close:hover {
+    background: rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    padding: 32px 24px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.modal-icon-large {
+    width: 80px;
+    height: 80px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: var(--primary);
+}
+
+.modal-title-area h2 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+.modal-category {
+    background: var(--primary);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-description p {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    font-size: 15px;
+}
+
+.modal-key-features h3 {
+    font-family: var(--font-heading);
+    color: var(--text-main);
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+.modal-key-features ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.modal-key-features li {
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-footer {
+    display: flex;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    gap: 16px;
+    background: var(--bg-panel);
+}
+
+.btn-fav, .btn-route {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--border-radius);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-fav {
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+}
+.btn-fav:hover {
+    border-color: var(--primary);
+}
+.btn-fav.active {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-route {
+    background: var(--primary);
+    border: none;
+    color: white;
+}
+.btn-route:hover {
+    background: var(--secondary);
+}
+
+/* Currency Modal Specific */
+#currencyRateDisplay {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 20px 0;
+    text-align: center;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .app-container { position: relative; }
+    .sidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 360px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .mobile-sidebar-toggle { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        position: fixed; /* Ensure it stays fixed on mobile too */
+        bottom: 90px; /* Aligned with WhatsApp mobile */
+        left: 20px;
+        width: 50px; /* Match WhatsApp mobile */
+        height: 50px; /* Match WhatsApp mobile */
+        font-size: 24px; /* Match WhatsApp mobile */
+        z-index: 9999;
+        margin: 0;
+        padding: 0;
+    }
+    .modal-card {
+        width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+    .modal-backdrop { align-items: flex-end; }
+    .whatsapp-float {
+        bottom: 90px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        z-index: 9999;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+/* --- LEAFLET CUSTOM STYLING (Green Theme) --- */
+
+/* All control containers: white background, subtle border */
+.leaflet-bar,
+.leaflet-control-layers,
+.leaflet-control-geocoder {
+    background-color: var(--bg-modal) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 12px rgba(27, 94, 32, 0.12) !important;
+    overflow: hidden !important;
+}
+
+/* All buttons: white bg, NO filter */
+.leaflet-bar a,
+.leaflet-control-layers-toggle,
+.leaflet-control-geocoder-icon {
+    background-color: var(--bg-modal) !important;
+    filter: none !important;
+}
+
+.leaflet-bar a {
+    border-bottom: 1px solid var(--border) !important;
+}
+.leaflet-bar a:last-child {
+    border-bottom: none !important;
+}
+
+.leaflet-bar a:hover,
+.leaflet-control-layers-toggle:hover,
+.leaflet-control-geocoder-icon:hover {
+    background-color: rgba(76, 175, 80, 0.08) !important;
+}
+
+/* Layers panel expanded */
+.leaflet-control-layers-expanded {
+    padding: 12px 16px !important;
+    font-family: var(--font-body) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--text-main) !important;
+    filter: none !important;
+}
+
+.leaflet-control-layers-list label {
+    margin-bottom: 6px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.leaflet-control-layers-separator {
+    border-top-color: var(--border) !important;
+}
+
+.leaflet-control-layers-selector {
+    accent-color: var(--primary) !important;
+    cursor: pointer;
+}
+
+/* Zoom control spacing */
+.leaflet-control-zoom {
+    margin-bottom: 8px !important;
+}
+
+/* Geocoder styling and perfect vertical alignment of input & icon */
+.leaflet-control-geocoder {
+    display: flex !important;
+    align-items: center !important;
+    height: 38px !important;
+    border-radius: 12px !important;
+    background-color: var(--bg-modal) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 4px 12px rgba(27, 94, 32, 0.12) !important;
+    transition: width 0.3s ease !important;
+    overflow: hidden !important;
+}
+
+.leaflet-control-geocoder-icon {
+    width: 38px !important;
+    height: 38px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    background-color: transparent !important;
+    flex-shrink: 0 !important;
+}
+
+.leaflet-control-geocoder-form {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.leaflet-control-geocoder-form input {
+    background-color: transparent !important;
+    color: var(--text-main) !important;
+    font-family: var(--font-body) !important;
+    font-size: 14px !important;
+    outline: none !important;
+    border: none !important;
+    height: 100% !important;
+    padding: 0 12px 0 4px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    line-height: normal !important;
+}
+
+/* Style Geocoder placeholder */
+.leaflet-control-geocoder-form input::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.7 !important;
+}
+
+.leaflet-control-geocoder-alternatives {
+    background-color: var(--bg-modal) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--border) !important;
+    font-family: var(--font-body) !important;
+}
+
+.leaflet-control-geocoder-alternatives a {
+    color: var(--text-main) !important;
+}
+
+.leaflet-control-geocoder-alternatives a:hover {
+    background-color: var(--bg-main) !important;
+    color: var(--primary) !important;
+}
+
+/* Hide the default Leaflet Routing Machine directions container */
+.leaflet-routing-container {
+    display: none !important;
+}
+
+/* --- USER LOCATION PULSING DOT --- */
+.user-location-dot {
+    width: 16px;
+    height: 16px;
+    background-color: #1a73e8;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(26, 115, 232, 0.6);
+    position: relative;
+}
+
+.user-location-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background-color: rgba(26, 115, 232, 0.2);
+    border-radius: 50%;
+    animation: userPulse 2s ease-out infinite;
+}
+
+@keyframes userPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.3);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+

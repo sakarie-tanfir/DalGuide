@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DalGuide - Hargeisa Tourist Guide</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- Leaflet Plugins CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="index.css?v=8">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- App Logo / Header -->
+            <header class="app-header">
+                <div class="logo">
+                    <span class="logo-icon"><i class="fa-solid fa-compass"></i></span>
+                    <div class="logo-text">
+                        <h1>DalGuide</h1>
+                        <p>Explore Hargeisa, Somaliland</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn" id="paymentBtn" title="Pay with Zaad / eDahab">
+                        <i class="fa-solid fa-wallet"></i>
+                    </button>
+                    <button class="action-btn" id="currencyBtn" title="Currency Exchange Rate">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                    </button>
+                    <button class="action-btn theme-toggle" id="themeToggle" title="Toggle Light/Dark Theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Navigation Tabs -->
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-tab="explore">
+                    <i class="fa-solid fa-magnifying-glass"></i> Explore
+                </button>
+                <button class="tab-btn" data-tab="favorites">
+                    <i class="fa-solid fa-heart"></i> Saved
+                    <span class="badge" id="favoritesBadge">0</span>
+                </button>
+                <button class="tab-btn" data-tab="itinerary">
+                    <i class="fa-solid fa-route"></i> Itinerary
+                </button>
+                <button class="tab-btn" data-tab="faq">
+                    <i class="fa-solid fa-circle-question"></i> FAQ
+                </button>
+            </nav>
+
+            <!-- Tab Contents -->
+            <div class="sidebar-content">
+                <!-- Tab: Explore -->
+                <section class="tab-pane active" id="exploreTab">
+                    <!-- Search and Filtering -->
+                    <div class="search-filter-container">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" id="searchInput" placeholder="Search spots, activities...">
+                            <button class="clear-search" id="clearSearch" style="display: none;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Category Tabs -->
+                        <div class="categories-wrapper">
+                            <div class="categories-scroll" id="categoriesContainer">
+                                <button class="category-btn active" data-category="all">All</button>
+                                <button class="category-btn" data-category="lounge">Lounges & Hangouts</button>
+                                <button class="category-btn" data-category="cafe">Cafes</button>
+                                <button class="category-btn" data-category="activity">Activities</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Attraction Cards List -->
+                    <div class="attractions-list" id="attractionsList">
+                        <!-- Dynamic content loaded via JS -->
+                    </div>
+                </section>
+
+                <!-- Tab: Saved Locations -->
+                <section class="tab-pane" id="favoritesTab">
+                    <div class="pane-header">
+                        <h2>Your Favorite Spots</h2>
+                        <p>Saved places to gather and chill.</p>
+                    </div>
+                    <div class="favorites-list" id="favoritesList">
+                        <!-- Dynamic content loaded via JS -->
+                    </div>
+                </section>
+
+                <!-- Tab: Itinerary Planner -->
+                <section class="tab-pane" id="itineraryTab">
+                    <div class="pane-header">
+                        <h2>Itinerary Planner</h2>
+                        <p>Plan your day-by-day route.</p>
+                    </div>
+                    
+                    <div class="itinerary-builder">
+                        <div class="day-selector">
+                            <label for="itineraryDay">Select Day:</label>
+                            <select id="itineraryDay">
+                                <option value="1">Day 1</option>
+                                <option value="2">Day 2</option>
+                                <option value="3">Day 3</option>
+                            </select>
+                        </div>
+
+                        <div class="itinerary-list-container">
+                            <ul class="itinerary-list" id="itineraryList">
+                                <!-- Dynamic content loaded via JS -->
+                            </ul>
+                            <div class="empty-itinerary" id="emptyItineraryMsg">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                                <p>Your itinerary is empty. Add a spot to get started!</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tab: FAQ -->
+                <section class="tab-pane" id="faqTab">
+                    <div class="pane-header">
+                        <h2>Travel FAQs</h2>
+                        <p>Everything you need to know about visiting Hargeisa.</p>
+                    </div>
+                    <div class="faq-list">
+                        <!-- Standard Travel FAQs -->
+                        <div class="faq-item">
+                            <div class="faq-question">What is the local currency? <i class="fa-solid fa-chevron-down"></i></div>
+                            <div class="faq-answer">The local currency is the Somaliland Shilling (SLSH). However, US Dollars are widely accepted everywhere, and most people use mobile money (ZAAD or eDahab) for daily transactions.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">Is it safe to visit Hargeisa? <i class="fa-solid fa-chevron-down"></i></div>
+                            <div class="faq-answer">Yes, Somaliland is known to be very safe and peaceful for travelers. Locals are incredibly hospitable and welcoming to tourists. Basic common sense travel precautions are advised.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">When is the best time to visit? <i class="fa-solid fa-chevron-down"></i></div>
+                            <div class="faq-answer">The best time to visit is during the cooler months, generally from October to March. Summers can get quite warm.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">What language is spoken? <i class="fa-solid fa-chevron-down"></i></div>
+                            <div class="faq-answer">Somali is the official language. Arabic and English are also widely spoken, especially in business, cafes, and by the younger generation.</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </aside>
+
+        <!-- Main Map Area -->
+        <main class="main-map-area">
+            <div id="map"></div>
+            <!-- Overlay to open/close sidebar on mobile -->
+            <button class="mobile-sidebar-toggle" id="mobileSidebarToggle" title="Open Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </main>
+    </div>
+
+    <!-- Location Detail Modal -->
+    <div class="modal-backdrop" id="detailModal">
+        <div class="modal-card">
+            <button class="modal-close" id="modalCloseBtn"><i class="fa-solid fa-xmark"></i></button>
+            
+            <!-- Icon/Title Header instead of Image -->
+            <div class="modal-header">
+                <div class="modal-icon-large" id="modalIcon">
+                    <i class="fa-solid fa-mug-hot"></i>
+                </div>
+                <div class="modal-title-area">
+                    <span class="modal-category" id="modalCategory">Category</span>
+                    <h2 id="modalTitle">Spot Name</h2>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-description">
+                    <p id="modalDesc">Detailed description of the spot...</p>
+                </div>
+
+                <div class="modal-key-features">
+                    <h3>What to do here</h3>
+                    <ul id="modalFeatures">
+                        <!-- loaded via JS -->
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-fav" id="modalFavBtn" title="Save" style="flex: 0 0 auto; width: 48px;"><i class="fa-regular fa-heart"></i></button>
+                <button class="btn-fav" id="modalItineraryBtn" style="flex: 1;"><i class="fa-solid fa-plus"></i> Itinerary</button>
+                <button class="btn-route" id="modalNavigateBtn" style="flex: 1.5; background-color: #4285F4;"><i class="fa-solid fa-location-arrow"></i> Navigate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Currency Exchange Modal -->
+    <div class="modal-backdrop" id="currencyModal">
+        <div class="modal-card" style="max-width: 400px;">
+            <button class="modal-close" id="currencyCloseBtn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-body" style="text-align: center; padding-top: 40px; padding-bottom: 24px;">
+                <i class="fa-solid fa-money-bill-transfer" style="font-size: 40px; color: var(--primary);"></i>
+                <h2 style="margin-top: 12px; font-family: var(--font-heading);">Currency Exchange</h2>
+                <p style="color: var(--primary); font-size: 13px; font-weight: bold; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Powered by SHABEL EXCHANGE</p>
+                
+                <div style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="font-size: 13px; font-weight: 600;">You Send (USD)</label>
+                        <span style="font-size: 12px; color: var(--text-muted);">Rate: 1 = 10,000 SLSH</span>
+                    </div>
+                    <div style="position: relative; margin-bottom: 16px;">
+                        <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: bold; color: var(--text-main);">$</span>
+                        <input type="number" id="exchangeUsdInput" placeholder="100" style="width: 100%; padding: 12px 12px 12px 28px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--font-body); font-size: 18px; font-weight: 600; background: var(--bg-modal); color: var(--text-main);">
+                    </div>
+
+                    <div style="text-align: center; margin-bottom: 16px; color: var(--primary);">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="font-size: 13px; font-weight: 600;">You Get (SLSH)</label>
+                    </div>
+                    <div style="position: relative;">
+                        <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: bold; color: var(--text-main);">Slsh</span>
+                        <input type="text" id="exchangeSlshOutput" value="0" readonly style="width: 100%; padding: 12px 12px 12px 50px; border-radius: 8px; border: 1px solid transparent; font-family: var(--font-body); font-size: 18px; font-weight: 600; background: rgba(76, 175, 80, 0.1); color: var(--primary);">
+                    </div>
+                </div>
+
+                <a id="btnExchangeNow" href="#" class="btn-route" style="width: 100%; text-decoration: none; text-align: center; display: block; padding: 14px; opacity: 0.5; pointer-events: none;">
+                    <i class="fa-solid fa-bolt"></i> Exchange Now
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal (Zaad / eDahab) -->
+    <div class="modal-backdrop" id="paymentModal">
+        <div class="modal-card" style="max-width: 400px;">
+            <button class="modal-close" id="paymentCloseBtn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-body" style="padding-top: 24px;">
+                <div style="text-align: center;">
+                    <i class="fa-solid fa-wallet" style="font-size: 48px; color: var(--secondary);"></i>
+                    <h2 style="margin-top: 16px; font-family: var(--font-heading);">Mobile Payment</h2>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+                        Enter the payment details below to instantly generate your secure USSD code. Simply tap the button at the bottom to pay directly from your phone.
+                    </p>
+                </div>
+                
+                <div style="display:flex; margin-bottom: 16px; border-bottom: 1px solid var(--border);">
+                    <button type="button" id="tabLocalPay" style="flex:1; padding: 10px; background:none; border:none; border-bottom: 2px solid var(--primary); font-weight:bold; color:var(--primary); cursor:pointer;">Local Mobile</button>
+                    <button type="button" id="tabIntlPay" style="flex:1; padding: 10px; background:none; border:none; border-bottom: 2px solid transparent; font-weight:bold; color:var(--text-muted); cursor:pointer;">International</button>
+                </div>
+                
+                <div id="localPayContent">
+                    <form id="paymentForm" style="margin-bottom: 10px; text-align: left;">
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">Currency</label>
+                            <select id="payCurrency" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--font-body); background: var(--bg-modal); color: var(--text-main);">
+                                <option value="usd">USD ($)</option>
+                                <option value="slsh">Somaliland Shillings (SLSH)</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">Account Type</label>
+                            <select id="payType" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--font-body); background: var(--bg-modal); color: var(--text-main);">
+                                <option value="regular">Regular Number</option>
+                                <option value="merchant">Merchant Number</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">Phone / Merchant Number</label>
+                            <input type="number" id="payNumber" placeholder="e.g. 063XXXXXXX or 12345" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--font-body); background: var(--bg-modal); color: var(--text-main);" required>
+                        </div>
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">Amount</label>
+                            <input type="number" id="payAmount" placeholder="e.g. 15" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--font-body); background: var(--bg-modal); color: var(--text-main);" required>
+                        </div>
+                        
+                        <a id="payDialBtn" href="tel:*880*NUMBER*AMOUNT%23" class="btn-route" style="width: 100%; text-decoration: none; text-align: center; background-color: var(--primary); display: block;">
+                            <i class="fa-solid fa-phone"></i> Dial *880*NUMBER*AMOUNT#
+                        </a>
+                    </form>
+                </div>
+
+                <div id="intlPayContent" style="display:none; text-align: left;">
+                    <p style="font-size: 13px; color:var(--text-muted); margin-bottom: 16px; text-align: center;">Support us from abroad via secure international gateways.</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 10px;">
+                        <a href="https://paypal.me/YourPayPalUsername" target="_blank" class="btn-route" style="background-color: #003087; width: 100%; border: none; color: white; text-decoration: none; text-align: center;">
+                            <i class="fa-brands fa-paypal"></i> PayPal
+                        </a>
+                        <a href="https://apple.com/apple-pay" target="_blank" class="btn-route" style="background-color: #000000; width: 100%; border: none; color: white; text-decoration: none; text-align: center;">
+                            <i class="fa-brands fa-apple"></i> Apple Pay
+                        </a>
+                        <a href="https://pay.google.com" target="_blank" class="btn-route" style="background-color: #ffffff; width: 100%; border: 1px solid var(--border); color: #3c4043; text-decoration: none; text-align: center;">
+                            <i class="fa-brands fa-google"></i> Google Pay
+                        </a>
+                        <button type="button" id="btnCreditCard" class="btn-route" style="background-color: #ff5f00; width: 100%; border: none; color: white; text-decoration: none; text-align: center; cursor: pointer;">
+                            <i class="fa-regular fa-credit-card"></i> Mastercard / Visa
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Simulated Credit Card Checkout Form -->
+                <div id="checkoutFormContent" style="display:none; text-align: left;">
+                    <button type="button" id="btnBackToMethods" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom: 16px; padding:0;">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Payment Methods
+                    </button>
+                    
+                    <form id="simulatedCheckoutForm">
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">Amount (USD)</label>
+                            <input type="number" placeholder="e.g. 50" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--font-body); background: var(--bg-modal); color: var(--text-main);" required>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">Cardholder Name</label>
+                            <input type="text" placeholder="John Doe" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--font-body); background: var(--bg-modal); color: var(--text-main);" required>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">Card Number</label>
+                            <input type="text" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--font-body); background: var(--bg-modal); color: var(--text-main);" required>
+                        </div>
+                        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                            <div style="flex: 1;">
+                                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">Expiry</label>
+                                <input type="text" placeholder="MM/YY" maxlength="5" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--font-body); background: var(--bg-modal); color: var(--text-main);" required>
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">CVC</label>
+                                <input type="text" placeholder="123" maxlength="4" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--font-body); background: var(--bg-modal); color: var(--text-main);" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" id="btnSubmitPayment" class="btn-route" style="width: 100%; text-align: center; background-color: #ff5f00; border: none; color: white;">
+                            <i class="fa-solid fa-lock"></i> Pay Securely
+                        </button>
+                    </form>
+                    
+                    <div id="paymentSuccessMsg" style="display:none; text-align:center; padding: 30px 0;">
+                        <i class="fa-solid fa-circle-check" style="font-size: 48px; color: var(--primary); margin-bottom: 16px;"></i>
+                        <h3 style="color: var(--text-main); margin-bottom: 8px;">Payment Successful!</h3>
+                        <p style="color: var(--text-muted); font-size: 14px;">Thank you for your transaction.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/252636699748" target="_blank" class="whatsapp-float" title="Contact us on WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Leaflet JS Library -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Leaflet Plugins JS -->
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <!-- Custom JS Application -->
+    <script src="app.js?v=9"></script>
+</body>
+</html>
